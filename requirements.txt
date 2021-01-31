@@ -1,0 +1,5 @@
+sanic~=20.12.1
+bcrypt~=3.2.0
+PyJWT~=2.0.1
+aiofiles~=0.6.0
+tortoise-orm~=0.16.20
