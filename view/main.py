@@ -9,7 +9,7 @@ app = Sanic("Project_for_NIT")
 register_tortoise(
     app,
     db_url=DB_URL,
-    modules={'models': ['model.User', 'model.Msg', 'model.Upload']},
+    modules={'models': ['model.User', 'model.Msg', 'model.Upload', 'model.Token']},
     generate_schemas=True
 )
 

@@ -6,7 +6,7 @@ from helpers.check_request import check_request
 
 
 async def user_create(request: Request):
-    request = check_request(request, ('login', 'password', 'first_name', 'last_name'))
+    request = await check_request(request, ('login', 'password', 'first_name', 'last_name'))
 
     user = await User.register(request.json.get('first_name'),
                                request.json.get('last_name'),

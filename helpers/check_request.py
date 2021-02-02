@@ -3,6 +3,7 @@ from typing import Union, Iterable
 from sanic.request import Request
 
 from helpers.auth_token import decode_auth_token
+from model.Token import Token
 from view.exceptions import InvalidUsage, Unauthorized
 from model.User import User
 
@@ -27,6 +28,10 @@ async def check_request(request: Request, data: Union[Iterable, str], need_auth:
     if need_auth:
         if request.cookies.get('Authorization') is None:
             raise Unauthorized('You need to be authorized')
-        user = await User.find(user_id=decode_auth_token(request.cookies.get('Authorization')), is_deleted=False)
-        return request, user
+        user_id, token = decode_auth_token(request.cookies.get('Authorization'))
+        user = await User.find(user_id=user_id, is_deleted=False)
+        valid = await Token.check_valid(token, user.id)
+        if valid:
+            return request, user
+
     return request

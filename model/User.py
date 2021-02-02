@@ -1,5 +1,3 @@
-import time
-
 from tortoise.exceptions import DoesNotExist, IntegrityError
 from tortoise.models import Model
 from tortoise import fields

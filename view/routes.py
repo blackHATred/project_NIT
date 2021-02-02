@@ -1,6 +1,7 @@
 from sanic import Sanic
 
 from controller.user.user_auth import user_auth
+from controller.user.user_logout import user_logout
 from controller.user.user_create import user_create
 from controller.user.user_edit import user_edit
 from controller.user.user_info import user_info
@@ -18,7 +19,8 @@ routes = ({'handler': user_create, 'uri': '/user', 'methods': ['POST']},
           {'handler': user_info, 'uri': '/user/<user_id:int>', 'methods': ['GET']},
           {'handler': user_edit, 'uri': '/user/<user_id:int>', 'methods': ['PATCH']},
           {'handler': user_auth, 'uri': '/auth', 'methods': ['POST']},
-          {'handler': user_update_avatar, 'uri': '/user/<user_id:int>/avatar', 'methods': ['POST']},
+          {'handler': user_logout, 'uri': '/logout', 'methods': ['POST']},
+          {'handler': user_update_avatar, 'uri': '/user/<user_id:int>/avatar', 'methods': ['PATCH']},
           {'handler': user_get_avatar, 'uri': '/user/<user_id:int>/avatar', 'methods': ['GET']},
 
           {'handler': msg_create, 'uri': '/msg', 'methods': ['POST']},
