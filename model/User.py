@@ -4,6 +4,7 @@ from tortoise import fields
 
 from helpers.hash import hash_pass
 from view.exceptions import InvalidUsage
+import pyotp
 
 
 class User(Model):
@@ -16,6 +17,8 @@ class User(Model):
     updated_at = fields.DatetimeField(auto_now=True)
     is_deleted = fields.BooleanField(default=False)
     photo = fields.IntField(null=True, default=None)  # Альтернатива - ForeignKey для модели Upload
+    totp_active = fields.BooleanField(default=False)
+    totp_key = fields.CharField(max_length=26, null=True, default=None)
 
     @staticmethod
     async def find(user_id: int = None, user_login: str = None, **kwargs):
@@ -43,6 +46,18 @@ class User(Model):
             await self.save()
         except ValueError:
             raise InvalidUsage('Invalid data')
+
+    async def add_totp(self):
+        self.totp_key = pyotp.random_base32()
+        await self.save()
+
+    async def check_totp(self, code: str):
+        if self.totp_key is None:
+            raise InvalidUsage('Two-factor authentication not activated')
+        if pyotp.TOTP(self.totp_key).verify(code):
+            return True
+        else:
+            raise InvalidUsage('Code is invalid')
 
     def __str__(self):
         return self.login
