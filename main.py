@@ -2,7 +2,7 @@ from sanic import Sanic
 from tortoise.contrib.sanic import register_tortoise
 
 from config.configuration import host, port, DB_URL
-from view.routes import all_routes
+from view.routes import register_routes
 
 
 app = Sanic("Project_for_NIT")
@@ -15,6 +15,6 @@ register_tortoise(
 
 
 if __name__ == "__main__":
-    all_routes(app=app)
+    register_routes(app=app)
     app.run(host=host,
             port=port)
