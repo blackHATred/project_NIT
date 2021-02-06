@@ -30,8 +30,6 @@ async def check_request(request: Request, data: Union[Iterable, str], need_auth:
             raise Unauthorized('You need to be authorized')
         user_id, token = decode_auth_token(request.cookies.get('Authorization'))
         user = await User.find(user_id=user_id, is_deleted=False)
-        valid = await Token.check_valid(token, user.id)
-        if valid:
-            return request, user
-
+        await Token.check_valid(token, user.id)
+        return request, user
     return request
