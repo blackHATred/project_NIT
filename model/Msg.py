@@ -1,8 +1,9 @@
 from tortoise.exceptions import DoesNotExist
 from tortoise.models import Model
 from tortoise import fields
+from tortoise.contrib.pydantic import pydantic_model_creator
 
-from view.exceptions import NotFound, InvalidUsage
+from sanic.exceptions import NotFound, InvalidUsage
 
 
 class Msg(Model):
@@ -17,9 +18,9 @@ class Msg(Model):
     reply_id = fields.IntField(null=True, default=None)   # Альтернатива - ForeignKey
 
     @staticmethod
-    async def find(msg_id: int, **kwargs):
+    async def find(msg_id: int, is_deleted: bool = False, **kwargs):
         try:
-            return await Msg.get(id=msg_id, **kwargs)
+            return await Msg.get(id=msg_id, is_deleted=is_deleted, **kwargs)
         except DoesNotExist:
             raise NotFound('This message does not exist')
 
@@ -38,5 +39,14 @@ class Msg(Model):
         except ValueError:
             raise InvalidUsage('Invalid data')
 
+    async def dump(self):
+        msg = (await MsgSchema.from_tortoise_orm(self)).dict()
+        msg['created_at'] = str(msg['created_at'])
+        msg['updated_at'] = str(msg['updated_at'])
+        return msg
+
     def __str__(self):
         return self.message
+
+
+MsgSchema = pydantic_model_creator(Msg)

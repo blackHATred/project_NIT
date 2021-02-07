@@ -9,10 +9,10 @@ from model.User import User
 
 async def user_edit(request: Request, user_id: int):
     request, user = await check_request(request, ('first_name', 'last_name'), True)
-    user_to_edit = await User.find(user_id=user_id, is_deleted=False)
+    user_to_edit = await User.find(user_id=user_id)
 
     if user_to_edit.id != user.id:
-        raise Forbidden('You do not have permission for edit this user')
+        raise Forbidden('You do not have permission to edit this user')
 
     # время обновления менять не обязательно, ORM делает это автоматически
     # user.updated_at = dt.datetime.utcnow()

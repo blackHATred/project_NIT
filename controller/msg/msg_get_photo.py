@@ -5,7 +5,7 @@ from config.configuration import UPLOAD_DIR
 from helpers.check_request import check_request
 from model.Msg import Msg
 from model.Upload import Upload
-from view.exceptions import InvalidUsage, Forbidden, NotFound
+from sanic.exceptions import InvalidUsage, Forbidden, NotFound
 
 
 async def msg_get_photo(request: Request, message_id: int):

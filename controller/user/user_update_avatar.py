@@ -3,14 +3,14 @@ from sanic.response import text
 import aiofiles
 import imghdr
 
-from view.exceptions import InvalidUsage, Forbidden
+from sanic.exceptions import InvalidUsage, Forbidden
 from model.Upload import Upload
 from helpers.check_request import check_request
 from config.configuration import UPLOAD_DIR, MAX_FILE_SIZE
 
 
 async def user_update_avatar(request: Request, user_id: int):
-    request, user = await check_request(request, list(), True)
+    user = (await check_request(request, list(), True))[1]
 
     if user.id != user_id: raise Forbidden('You do not have permission to update this avatar')
 

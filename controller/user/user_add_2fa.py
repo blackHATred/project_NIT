@@ -5,7 +5,7 @@ import pyotp
 import io
 
 from helpers.check_request import check_request
-from view.exceptions import InvalidUsage
+from sanic.exceptions import InvalidUsage
 
 
 async def user_add_2fa(request: Request):
@@ -23,7 +23,7 @@ async def user_add_2fa(request: Request):
     else:
         request, user = await check_request(request, ['2FA_code'], True)
         if not user.totp_active:
-            await user.check_totp(request.json.get('2FA_code'))
+            await user.check_totp(request['2FA_code'])
             await user.update(totp_active=True)
             return text('Success')
         else:

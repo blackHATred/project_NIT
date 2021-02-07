@@ -7,7 +7,7 @@ from config.configuration import UPLOAD_DIR
 
 
 async def user_get_avatar(request: Request, user_id: int):
-    user = await User.find(user_id=user_id, is_deleted=False)
+    user = await User.find(user_id=user_id)
 
     if user.photo is not None:
         try:

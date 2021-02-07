@@ -3,7 +3,7 @@ from sanic.response import json
 
 from helpers.check_request import check_request
 from model.Msg import Msg
-from view.exceptions import Forbidden
+from sanic.exceptions import Forbidden
 
 
 async def msg_read(request: Request, message_id: int):
@@ -12,13 +12,4 @@ async def msg_read(request: Request, message_id: int):
 
     if user.id not in (msg.sender_id, msg.recipient_id):
         raise Forbidden('You do not have permission to view this message')
-    return json({
-        'id': msg.id,
-        'sender_id': msg.sender_id,
-        'recipient_id': msg.recipient_id,
-        'upload_id': msg.upload_id,
-        'created_at': str(msg.created_at),
-        'updated_at': str(msg.updated_at),
-        'message': msg.message,
-        'reply_id': msg.reply_id
-    })
+    return json(await msg.dump())
